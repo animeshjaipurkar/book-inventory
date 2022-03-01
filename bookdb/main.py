@@ -8,7 +8,23 @@ from .database import SessionLocal, engine
 
 models.Base.metadata.create_all(bind=engine)
 
-app = FastAPI()
+description = """
+Book Inventory App API lets you create, view, update & delete books
+"""
+
+app = FastAPI(
+    title="Book Inventory App",
+    description=description,
+    version="0.0.1",    
+    contact={
+        "name": "Animesh Jaipurkar",        
+        "email": "animesh.jaipurkar@gmail.com",
+    },
+    license_info={
+        "name": "Apache 2.0",
+        "url": "https://www.apache.org/licenses/LICENSE-2.0.html",
+    },
+)
 
 def get_db():
     db = SessionLocal()
