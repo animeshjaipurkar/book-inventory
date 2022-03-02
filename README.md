@@ -9,14 +9,14 @@ Git clone the repository:
 Install python3.6+ if not already installed
 
 Set up virtual environment
-python3 -m venv env 
+- python3 -m venv env 
 
 Activate the virtual environment
-. ./env/bin/activate
+- . ./env/bin/activate
 
 
 Install the requirements
-pip install requirements.txt
+- pip install requirements.txt
 
 
 Start the server with command:

@@ -9,7 +9,7 @@ from .database import SessionLocal, engine
 models.Base.metadata.create_all(bind=engine)
 
 description = """
-Book Inventory App API lets you create, view, update & delete books
+Book Inventory API lets you create, view, update & delete books
 """
 
 app = FastAPI(
@@ -36,6 +36,9 @@ def get_db():
 
 @app.post("/books/", response_model=schemas.Book)
 def create_book(book: schemas.BookCreate, db: Session = Depends(get_db)):
+    """
+    Create a new book entity with given information
+    """
     db_book = crud.get_book_by_title(db, title=book.title)
     if db_book:
         raise HTTPException(status_code=400, detail="Book with this title already exists")
@@ -43,13 +46,22 @@ def create_book(book: schemas.BookCreate, db: Session = Depends(get_db)):
 
 
 @app.get("/books/", response_model=List[schemas.Book])
-def read_books(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
-    books = crud.get_books(db, skip=skip, limit=limit)
+def read_books(skip: int = 0, limit: int = 100, author: Optional[str] = None, db: Session = Depends(get_db)):
+    """
+    Gets list of books available in the inventory 
+    """
+    if author:
+        books = crud.get_books_by_author(db, author=author, skip=skip, limit=limit)
+    else:
+        books = crud.get_books(db, skip=skip, limit=limit)
     return books
 
 
 @app.delete("/books/{book_id}", status_code=204)
 def delete_book(book_id: int, db: Session = Depends(get_db)) -> None:
+    """
+    Delete a book identified by id
+    """
     book_to_delete = find_book(book_id, db)
 
     if book_to_delete is not None:
@@ -65,6 +77,9 @@ def find_book(book_id, db) -> Optional[schemas.Book]:
 
 @app.patch("/books/{book_id}", response_model=schemas.Book)
 def update_book(book_id: int, item: schemas.BookUpdate, db: Session = Depends(get_db)):
+    """
+    Update an existing book with new information for one or more of its attributes
+    """
     
     stored_book_data = crud.get_book_by_id(db, id=book_id)
     if not stored_book_data:

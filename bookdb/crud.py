@@ -12,8 +12,8 @@ def get_book_by_title(db: Session, title: str):
 def get_book_by_id(db: Session, id: int):
     return db.query(models.Book).filter(models.Book.id == id).first()
 
-def get_books_by_author(db: Session, author: str):
-    return db.query(models.Book).filter(models.Book.author == author).all()
+def get_books_by_author(db: Session, author: str, skip: int = 0, limit: int = 100):
+    return db.query(models.Book).filter(models.Book.author == author).offset(skip).limit(limit).all()
 
 def get_books(db: Session, skip: int = 0, limit: int = 100):
     return db.query(models.Book).offset(skip).limit(limit).all()
